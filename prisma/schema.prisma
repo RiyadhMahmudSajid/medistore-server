@@ -22,39 +22,109 @@ enum OrderStatus {
 }
 
 model Categories {
-  id String @id @default(uuid())
-  name String @unique
+  id        String      @id @default(uuid())
+  name      String      @unique
   medicines Medicines[]
 }
 
 model Medicines {
-  id String @id @default(uuid())
-  name String @db.VarChar(50)
-  description String @db.VarChar(200)
-  price Float
-  stock Int @default(0)
+  id           String     @id @default(uuid())
+  name         String     @db.VarChar(50)
+  description  String     @db.VarChar(200)
+  price        Float
+  stock        Int        @default(0)
   manufacturer String
-  image String
-  categoryId String
-  category Categories @relation(fields: [categoryId],references: [id])
-  reviews Reviews[]
+  image        String
+  categoryId   String
+  category     Categories @relation(fields: [categoryId], references: [id])
+  reviews      Reviews[]
 }
+
 model Orders {
-  id String @id @default(uuid())
-  status OrderStatus @default(PLACED)
-  createdAt DateTime @default(now())
-  updateAt DateTime @updatedAt
-  order OrderItem[]
+  id        String      @id @default(uuid())
+  status    OrderStatus @default(PLACED)
+  createdAt DateTime    @default(now())
+  updateAt  DateTime    @updatedAt
+  order     OrderItem[]
 }
 
 model OrderItem {
-  id String @id @default(uuid())
+  id      String @id @default(uuid())
   orderId String
-  order Orders @relation(fields: [orderId],references: [id])
+  order   Orders @relation(fields: [orderId], references: [id])
 }
 
 model Reviews {
-  id String @id @default(uuid())
+  id         String    @id @default(uuid())
   medicineId String
-  medicine Medicines @relation(fields: [medicineId], references: [id]) 
+  medicine   Medicines @relation(fields: [medicineId], references: [id])
+  customerId String
+  customer   User      @relation(fields: [customerId], references: [id])
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+
+  reviews Reviews[]
+
+  role String? @default("USER")
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
 }

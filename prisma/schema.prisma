@@ -37,6 +37,8 @@ model Medicines {
   image        String
   categoryId   String
   category     Categories @relation(fields: [categoryId], references: [id])
+  sellerId    String
+  seller      User @relation(fields: [sellerId],references: [id])
   reviews      Reviews[]
 }
 
@@ -74,6 +76,7 @@ model User {
   accounts      Account[]
 
   reviews Reviews[]
+  seller Medicines[]
 
   role String? @default("USER")
 

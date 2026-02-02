@@ -5,5 +5,7 @@ import authenticationMiddleware, { UserRole } from "../../middleware/authenticat
 const router = express.Router()
 
 router.post("/",authenticationMiddleware(UserRole.SELLER), medicineController.createMedicine)
+router.get("/",medicineController.getAllMedicine)
+router.get("/:MedicineId",medicineController.getMedicineById)
 
 export const medicineRouter:Router = router

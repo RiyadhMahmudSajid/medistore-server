@@ -16,7 +16,10 @@ const createCategory = async (req:Request,res:Response)=>{
 
 const getCategory = async (req:Request,res:Response)=>{
     try{
-        const result = await categoryService.getCategory()
+        const {search} = req.query 
+        console.log(search);
+        const searchString = typeof search === 'string' ? search : undefined
+        const result = await categoryService.getCategory({search:searchString})
         res.status(201).json(result)
     }catch(err){
         res.status(400).json({

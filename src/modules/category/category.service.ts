@@ -8,9 +8,17 @@ const createCategory = async (data: Omit<Categories, "id">) => {
     return result
 }
 
-const getCategory = async () => {
+const getCategory = async ({search}:{search:string | undefined }) => {
 
-    const result = await await prisma.categories.findMany()
+    const result =  await prisma.categories.findMany({
+        where:{
+            name: {
+                contains: search as string,
+                mode:'insensitive'
+            }
+        }
+    })
+    
     return result
 
 

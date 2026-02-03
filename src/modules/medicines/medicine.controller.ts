@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
 import { medicineService } from "./medicine.service"
+import pagination from "../../helper/pagination"
 
 const createMedicine = async (req: Request, res: Response) => {
     try {
@@ -21,14 +22,14 @@ const createMedicine = async (req: Request, res: Response) => {
 const getAllMedicine = async (req: Request, res: Response) => {
     try {
         const { search } = req.query
-        const page = Number(req.query.page)
-        const limit= Number(req.query.limit)
 
-        const skip = (page - 1) * limit 
+
+
+        const { page, limit, skip, sortby, sortOrder } = pagination(req.query)
 
         const searchMedicine = typeof search == 'string' ? search : undefined
 
-        const result = await medicineService.getAllMedicine({ search: searchMedicine,page,limit,skip })
+        const result = await medicineService.getAllMedicine({ search: searchMedicine, page, limit, skip, sortby, sortOrder })
         res.status(201).json(result)
     } catch (err) {
         res.status(400).json({
@@ -44,7 +45,7 @@ const getAllMedicine = async (req: Request, res: Response) => {
 const getMedicineById = async (req: Request, res: Response) => {
     try {
 
-        const MedicineId  = req.params.MedicineId as string
+        const MedicineId = req.params.MedicineId as string
         console.log(MedicineId);
 
         const result = await medicineService.getMedicineById(MedicineId)
@@ -61,6 +62,46 @@ const getMedicineById = async (req: Request, res: Response) => {
     }
 }
 
+const deleteMedicine = async (req: Request, res: Response) => {
+    try {
+
+        const MedicineId = req.params.MedicineId as string
+        console.log(MedicineId);
+        const sellerId = req.user?.id as string
+        const result = await medicineService.deleteMedicine(MedicineId, sellerId)
+        res.status(201).json(result)
+
+    } catch (err) {
+        res.status(400).json({
+            error: "Can Not find Medicine",
+
+            details: err
+
+        })
+        console.log(err);
+    }
+}
+
+const updateMedicine = async (req: Request, res: Response) => {
+    try {
+        const MedicineId = req.params.MedicineId as string
+        console.log(MedicineId);
+        const sellerId = req.user?.id as string
+        const result = await medicineService.updateMedicine(MedicineId, sellerId,req.body)
+        res.status(201).json(result)
+
+    } catch (err) {
+         res.status(400).json({
+            error: "Can Not Update Medicine",
+
+            details: err
+
+        })
+        console.log(err);
+
+    }
+}
+
 export const medicineController = {
-    createMedicine, getAllMedicine,getMedicineById
+    createMedicine, getAllMedicine, getMedicineById, deleteMedicine ,updateMedicine
 }

@@ -8,22 +8,53 @@ const createCategory = async (data: Omit<Categories, "id">) => {
     return result
 }
 
-const getCategory = async ({search}:{search:string | undefined }) => {
+const getCategory = async ({ search }: { search: string | undefined }) => {
 
-    const result =  await prisma.categories.findMany({
-        where:{
+    const result = await prisma.categories.findMany({
+        where: {
             name: {
                 contains: search as string,
-                mode:'insensitive'
+                mode: 'insensitive'
             }
         }
     })
-    
+
     return result
 
 
 }
+
+const getCategoryById = async (categoryId: string) => {
+    const result = await prisma.categories.findUnique({
+        where: {
+            id: categoryId
+
+        },
+        include: {
+            medicines: true,
+            _count: {
+                select: {
+                    medicines: true
+                }
+            }
+        }
+    })
+    return result
+}
+
+const deleteCategoryById = async (categoryId: string) => {
+
+    const result = await prisma.categories.delete({
+        where: {
+            id: categoryId
+
+        }
+
+    })
+    return result
+
+}
 export const categoryService = {
     createCategory,
-    getCategory
+    getCategory, getCategoryById,deleteCategoryById
 }

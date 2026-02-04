@@ -4,6 +4,8 @@ import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth";
 import cors from "cors";
 import { medicineRouter } from "./modules/medicines/medicine.router";
+import { orderRouter } from "./modules/order/order.route";
+import { addressRouter } from "./modules/address/address.router";
 
 const app:Application = express()
 app.use(cors({
@@ -15,6 +17,8 @@ app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use(express.json())
 app.use('/categoryPost',categoryRouter)
 app.use('/medicine',medicineRouter)
+app.use('/address',addressRouter)
+app.use('/order',orderRouter)
 app.get("/",(req,res)=>{
     res.send("Hello world")
 })

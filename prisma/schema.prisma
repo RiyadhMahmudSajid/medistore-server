@@ -37,30 +37,52 @@ model Medicines {
   image        String
   categoryId   String
   views        Int        @default(0)
-  category     Categories @relation(fields: [categoryId], references: [id])
+  category     Categories @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   sellerId     String
   seller       User       @relation(fields: [sellerId], references: [id])
   reviews      Reviews[]
+  orderItem OrderItem[]
+}
+
+model Address {
+  id       String  @id @default(uuid())
+  fullName String
+  phone    String
+  city     String
+  area     String
+  userId   String
+  order    Orders?
+  user     User    @relation(fields: [userId], references: [id])
 }
 
 model Orders {
-  id        String      @id @default(uuid())
-  status    OrderStatus @default(PLACED)
-  createdAt DateTime    @default(now())
-  updateAt  DateTime    @updatedAt
-  order     OrderItem[]
+  id         String      @id @default(uuid())
+  status     OrderStatus @default(PLACED)
+  totalPrice Float
+  createdAt  DateTime    @default(now())
+  updateAt   DateTime    @updatedAt
+  addressId  String      @unique
+  address    Address     @relation(fields: [addressId], references: [id])
+  customerId String
+  customer   User        @relation(fields: [customerId], references: [id])
+  order      OrderItem[]
 }
 
 model OrderItem {
-  id      String @id @default(uuid())
-  orderId String
-  order   Orders @relation(fields: [orderId], references: [id])
+  id         String @id @default(uuid())
+  orderId    String
+  medicineId String
+
+  quantity Int
+  price    Float
+  order    Orders @relation(fields: [orderId], references: [id])
+  medicine Medicines @relation(fields: [medicineId], references: [id])
 }
 
 model Reviews {
   id         String    @id @default(uuid())
   medicineId String
-  medicine   Medicines @relation(fields: [medicineId], references: [id])
+  medicine   Medicines @relation(fields: [medicineId], references: [id], onDelete: Cascade)
   customerId String
   customer   User      @relation(fields: [customerId], references: [id])
 }
@@ -76,8 +98,10 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
-  reviews Reviews[]
-  seller  Medicines[]
+  reviews  Reviews[]
+  seller   Medicines[]
+  address  Address[]
+  customer Orders[]
 
   role String? @default("USER")
 

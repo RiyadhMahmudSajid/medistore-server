@@ -10,5 +10,6 @@ const router = express.Router()
 
 router.post("/",authenticationMiddleware (UserRole.ADMIN),categoryController.createCategory)
 router.get("/",categoryController.getCategory)
-
+router.get("/:categoryId",authenticationMiddleware(UserRole.ADMIN),categoryController.getCategoryById)
+router.delete("/:categoryId",authenticationMiddleware(UserRole.ADMIN),categoryController.deleteCategoryById)
 export const categoryRouter:Router = router

@@ -6,6 +6,8 @@ import cors from "cors";
 import { medicineRouter } from "./modules/medicines/medicine.router";
 import { orderRouter } from "./modules/order/order.route";
 import { addressRouter } from "./modules/address/address.router";
+import errorHandler from "./middleware/globalErrorHandler";
+import { notFound } from "./middleware/notFound";
 
 const app:Application = express()
 app.use(cors({
@@ -19,8 +21,12 @@ app.use('/categoryPost',categoryRouter)
 app.use('/medicine',medicineRouter)
 app.use('/address',addressRouter)
 app.use('/order',orderRouter)
+
 app.get("/",(req,res)=>{
     res.send("Hello world")
 })
+
+app.use(errorHandler)
+app.use(notFound)
 
 export default app

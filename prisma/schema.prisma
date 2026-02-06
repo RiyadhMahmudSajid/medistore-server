@@ -81,6 +81,8 @@ model OrderItem {
 
 model Reviews {
   id         String    @id @default(uuid())
+  rating     Int
+  comment    String
   medicineId String
   medicine   Medicines @relation(fields: [medicineId], references: [id], onDelete: Cascade)
   customerId String

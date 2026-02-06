@@ -8,6 +8,7 @@ import { orderRouter } from "./modules/order/order.route";
 import { addressRouter } from "./modules/address/address.router";
 import errorHandler from "./middleware/globalErrorHandler";
 import { notFound } from "./middleware/notFound";
+import { reviewRouter } from "./modules/review/review.route";
 
 const app:Application = express()
 app.use(cors({
@@ -21,7 +22,7 @@ app.use('/categoryPost',categoryRouter)
 app.use('/medicine',medicineRouter)
 app.use('/address',addressRouter)
 app.use('/order',orderRouter)
-
+app.use("/review",reviewRouter)
 app.get("/",(req,res)=>{
     res.send("Hello world")
 })

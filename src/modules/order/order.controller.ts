@@ -15,6 +15,20 @@ const createOrder = async (req: Request, res: Response,next:NextFunction) => {
     }
 }
 
+const updateOrderStatus = async (req: Request, res: Response)=>{
+    try{
+
+        const orderId = req.params.orderId as string
+        const {status} = req.body
+        const result = await orderService.updateOrderStatus(orderId,status)
+        console.log(result);
+        res.status(201).json(result)
+
+    }catch(err){
+        console.log(err);
+    }
+}
+
 export const orderController = {
-    createOrder
+    createOrder,updateOrderStatus
 }

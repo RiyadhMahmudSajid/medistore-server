@@ -5,7 +5,7 @@ import nodemailer from "nodemailer"
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
-    secure: false, 
+    secure: false,
     auth: {
         user: process.env.APP_USER,
         pass: process.env.APP_PASS,
@@ -57,13 +57,14 @@ export const auth = betterAuth({
 
             }
         },
-        socialProviders: {
-            google: {
-                accessType: "offline",
-                prompt: "select_account consent",
-                clientId: process.env.GOOGLE_CLIENT_ID as string,
-                clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-            },
+
+    },
+    socialProviders: {
+        google: {
+            accessType: "offline",
+            prompt: "select_account consent",
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
         },
     },
 });

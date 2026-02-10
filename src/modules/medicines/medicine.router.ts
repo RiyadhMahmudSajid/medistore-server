@@ -7,6 +7,7 @@ const router = express.Router()
 router.post("/",authenticationMiddleware(UserRole.SELLER), medicineController.createMedicine)
 router.get("/",medicineController.getAllMedicine)
 router.get("/:MedicineId",medicineController.getMedicineById)
+
 router.delete("/:MedicineId",authenticationMiddleware(UserRole.SELLER),medicineController.deleteMedicine)
 router.patch("/:MedicineId",authenticationMiddleware(UserRole.SELLER),medicineController.updateMedicine)
 

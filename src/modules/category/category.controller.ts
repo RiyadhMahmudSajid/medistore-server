@@ -33,10 +33,7 @@ const getCategoryById = async (req: Request, res: Response) => {
     try {
 
         const categoryId = req.params.categoryId as string
-        const UserIdentity = req.user?.role as string
-        if (UserIdentity !== UserRole.ADMIN) {
-            throw new Error('You Have No permission')
-        }
+       
         const result = await categoryService.getCategoryById(categoryId)
         res.status(201).json(result)
     } catch (err) {

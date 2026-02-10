@@ -11,12 +11,14 @@ const createCategory = async (data: Omit<Categories, "id">) => {
 const getCategory = async ({ search }: { search: string | undefined }) => {
 
     const result = await prisma.categories.findMany({
-        where: {
-            name: {
-                contains: search as string,
-                mode: 'insensitive'
+        where: search
+            ? {
+                name: {
+                    contains: search,
+                    mode: "insensitive",
+                },
             }
-        }
+            : {},
     })
 
     return result
@@ -56,5 +58,5 @@ const deleteCategoryById = async (categoryId: string) => {
 }
 export const categoryService = {
     createCategory,
-    getCategory, getCategoryById,deleteCategoryById
+    getCategory, getCategoryById, deleteCategoryById
 }

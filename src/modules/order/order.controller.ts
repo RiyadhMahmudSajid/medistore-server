@@ -28,7 +28,35 @@ const updateOrderStatus = async (req: Request, res: Response)=>{
         console.log(err);
     }
 }
+const paymentSuccess = async (req: Request, res: Response) => {
+    try {
+        const result = await orderService.handleSuccess(req.params.orderId as string);
+        res.send(result.message);
+    } catch (error: any) {
+        res.status(500).send(error.message);
+    }
+};
+
+const paymentFail = async (req: Request, res: Response) => {
+    try {
+        const result = await orderService.handleFail(req.params.orderId as string);
+        res.send(result.message);
+    } catch (error: any) {
+        res.status(500).send(error.message);
+    }
+};
+
+const paymentCancel = async (req: Request, res: Response) => {
+    try {
+        const result = await orderService.handleCancel(req.params.orderId as string);
+        res.send(result.message);
+    } catch (error: any) {
+        res.status(500).send(error.message);
+    }
+};
 
 export const orderController = {
-    createOrder,updateOrderStatus
+    createOrder,updateOrderStatus, paymentSuccess,
+    paymentFail,
+    paymentCancel,
 }

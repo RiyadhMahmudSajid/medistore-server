@@ -28,8 +28,9 @@ export const auth = betterAuth({
     },
     emailAndPassword: {
         enabled: true,
-        autoSignIn: false,
-        requireEmailVerification: true
+        autoSignIn: true,
+        requireEmailVerification: true,
+        
     },
     emailVerification: {
         sendOnSignUp: true,
@@ -39,7 +40,7 @@ export const auth = betterAuth({
                 console.log({ user, url, token });
                 const verificationUrl = `${process.env.BETTER_APP_URL}/verify-email?token=${token}`
                 const info = await transporter.sendMail({
-                    from: '"MedeStore" <maddison53@me.email>',
+                    from: `"MedeStore" <rdh@gmail.com>`,
                     to: user.email,
                     subject: "Verify your email",
                     text: "Medi Store",
@@ -54,7 +55,7 @@ export const auth = betterAuth({
             `,
                 });
             } catch (err) {
-
+                console.log(err);
             }
         },
 

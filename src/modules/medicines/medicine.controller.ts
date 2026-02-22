@@ -61,6 +61,27 @@ const getMedicineById = async (req: Request, res: Response) => {
         console.log(err);
     }
 }
+const getMedicineBySellerId = async (req: Request, res: Response) => {
+    try {
+
+         if (req.user?.id && req.user.role !== "SELLER" as string) {
+
+            return res.status(400).json({ message: `this is  ${req.user.role}` })
+        }
+
+        const result = await medicineService.getMedicineBySellerId(req.user?.id as string)
+        res.status(201).json(result)
+
+    } catch (err) {
+        res.status(400).json({
+            error: "Can Not find Medicine",
+
+            details: err
+
+        })
+        console.log(err);
+    }
+}
 
 const deleteMedicine = async (req: Request, res: Response) => {
     try {
@@ -103,5 +124,5 @@ const updateMedicine = async (req: Request, res: Response) => {
 }
 
 export const medicineController = {
-    createMedicine, getAllMedicine, getMedicineById, deleteMedicine ,updateMedicine
+    createMedicine, getAllMedicine, getMedicineById, deleteMedicine ,updateMedicine,getMedicineBySellerId
 }

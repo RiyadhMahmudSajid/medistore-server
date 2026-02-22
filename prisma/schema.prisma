@@ -30,7 +30,7 @@ model Categories {
 model Medicines {
   id           String     @id @default(uuid())
   name         String     @db.VarChar(50)
-  description  String     @db.VarChar(200)
+  description  String     @db.VarChar(1000)
   price        Float
   stock        Int        @default(0)
   manufacturer String

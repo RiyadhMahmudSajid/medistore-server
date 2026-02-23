@@ -191,12 +191,57 @@ const handleCancel = async (orderId?: string) => {
     };
 };
 
+const getMyOrder = async ( customerId: string) => {
+  
+  const customerMedicine = await prisma.orders.findMany({
+    where: {
+        customerId:  customerId,
+    },
+    include: {
+      address: true,
+      order: {
+        include: {
+          medicine: true,
+        },
+      },
+    },
+  });
+
+  return customerMedicine;
+};
+
+const getMyMedicineOrder = async (sellerId:string)=>{
+   const sellerOrders = await prisma.orders.findMany({
+     where:{
+        order:{
+            some:{
+                medicine:{
+                    sellerId:sellerId
+                }
+            }
+        }
+     },
+
+     include:{
+        address:true,
+        customer:true,
+        order:{
+            include:{
+                medicine:true
+            }
+        }
+     }
+   })
+   return sellerOrders
+}
+
 
 
 export const orderService = {
     createOrder, updateOrderStatus, handleSuccess,
     handleFail,
     handleCancel,
+     getMyOrder,getMyMedicineOrder
 }
 
 

@@ -157,18 +157,4 @@ export const medicineService = {
 }
 
 
-// model Medicines {
-//   id           String     @id @default(uuid())
-//   name         String     @db.VarChar(50)
-//   description  String     @db.VarChar(200)
-//   price        Float
-//   stock        Int        @default(0)
-//   manufacturer String
-//   image        String
-//   categoryId   String
-//   views        Int        @default(0)
-//   category     Categories @relation(fields: [categoryId], references: [id])
-//   sellerId     String
-//   seller       User       @relation(fields: [sellerId], references: [id])
-//   reviews      Reviews[]
-// }
+

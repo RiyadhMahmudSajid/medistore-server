@@ -12,6 +12,7 @@ const createReview = async (payload: review, medicineId: string, customerId: str
         where: {
             customerId,
             status: "DELIVERED",
+            order: { some: { medicineId } }
         }
     })
     console.log(deliveredOrder);
@@ -51,21 +52,25 @@ const getReviewForSeller = async (userID: string) => {
     if (!userID) {
         throw new Error("You have no permission")
     }
-    
+
     const result = await prisma.medicines.findMany({
-        where:{
-            sellerId:userID
+        where: {
+            sellerId: userID
         },
-       
-        include:{
-            reviews:true
-            
+
+        include: {
+            reviews: {
+                include: {
+                    customer: true
+                }
+            }
+
         },
-        
+
 
 
     })
-   
+
 
 
     return result

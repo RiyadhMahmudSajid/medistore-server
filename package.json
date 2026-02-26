@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
-    "start": "node dist/server.js",
     "build": "tsc",
+    "start": "node --import=extensionless/register dist/server.js",
+    "dev": "tsx watch src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed:admin": "tsx watch src/scripts/seedAdmin.ts"
   },
@@ -31,6 +31,7 @@
     "cors": "^2.8.6",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
+    "extensionless": "^2.0.6",
     "nodemailer": "^7.0.13",
     "pg": "^8.17.2",
     "sslcommerz-lts": "^1.2.0"

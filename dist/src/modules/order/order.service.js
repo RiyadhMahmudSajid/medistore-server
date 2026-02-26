@@ -1,0 +1,192 @@
+import { OrderStatus } from "../../../generated/prisma/enums";
+import { prisma } from "../../lib/prisma";
+import SSLCommerzPayment from "sslcommerz-lts";
+const store_id = process.env.STORE_ID;
+const store_passwd = process.env.STORE_PASS;
+const is_live = false;
+const createOrder = async (payload, customerId) => {
+    const orderResult = await prisma.$transaction(async (tx) => {
+        const medicineIds = payload.items.map(item => item.medicineId);
+        const medicinesInDb = await tx.medicines.findMany({
+            where: { id: { in: medicineIds } }
+        });
+        let calculatedTotalPrice = 0;
+        const orderItemsData = payload.items.map(item => {
+            const medicine = medicinesInDb.find(m => m.id === item.medicineId);
+            if (!medicine) {
+                throw new Error(`Medicine ID ${item.medicineId} not found`);
+            }
+            const itemTotal = medicine.price * item.quantity;
+            calculatedTotalPrice += itemTotal;
+            return {
+                medicineId: item.medicineId,
+                quantity: item.quantity,
+                price: medicine.price
+            };
+        });
+        const result = await tx.orders.create({
+            data: {
+                status: payload.status ?? "PLACED",
+                totalPrice: calculatedTotalPrice,
+                address: { connect: { id: payload.addressId } },
+                customer: { connect: { id: customerId } },
+                order: {
+                    create: orderItemsData.map(item => ({
+                        medicine: { connect: { id: item.medicineId } },
+                        quantity: item.quantity,
+                        price: item.price
+                    }))
+                },
+            },
+            include: {
+                order: true,
+                address: true,
+                customer: true
+            }
+        });
+        return result;
+    });
+    const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
+    const paymentData = {
+        total_amount: orderResult.totalPrice,
+        currency: "BDT",
+        tran_id: orderResult.id,
+        success_url: `http://localhost:5000/order/success/${orderResult.id}`,
+        fail_url: `http://localhost:5000/order/fail/${orderResult.id}`,
+        cancel_url: `http://localhost:5000/order/cancel/${orderResult.id}`,
+        ipn_url: "",
+        shipping_method: 'Courier',
+        product_name: 'Medicine Bundle',
+        product_category: 'Healthcare',
+        product_profile: 'general',
+        cus_name: 'Customer',
+        cus_email: 'customer@test.com',
+        cus_add1: 'Dhaka',
+        cus_phone: '01700000000',
+        ship_name: 'Customer',
+        ship_add1: 'Dhaka',
+        ship_city: 'Dhaka',
+        ship_state: 'Dhaka',
+        ship_postcode: 1000,
+        ship_country: 'Bangladesh',
+    };
+    const apiResponse = await sslcz.init(paymentData);
+    return {
+        order: orderResult,
+        paymentUrl: apiResponse.GatewayPageURL
+    };
+};
+const updateOrderStatus = async (orderId, statusUpdate) => {
+    let fromStatus;
+    if (statusUpdate === 'PROCESSING' || statusUpdate === 'CANCELLED') {
+        fromStatus = 'PLACED';
+    }
+    else if (statusUpdate === 'SHIPPING') {
+        fromStatus = 'PROCESSING';
+    }
+    else if (statusUpdate === 'DELIVERED') {
+        fromStatus = 'SHIPPING';
+    }
+    else {
+        throw new Error('Invalid target status');
+    }
+    const result = await prisma.orders.updateMany({
+        where: {
+            id: orderId,
+            status: fromStatus,
+        },
+        data: {
+            status: statusUpdate,
+        },
+    });
+    return result;
+};
+const handleSuccess = async (orderId) => {
+    if (!orderId) {
+        throw new Error("Order ID is missing");
+    }
+    await prisma.orders.update({
+        where: { id: orderId },
+        data: {
+            status: OrderStatus.PROCESSING,
+        },
+    });
+    return {
+        message: "Payment successful! Order is now processing.",
+    };
+};
+const handleFail = async (orderId) => {
+    if (orderId) {
+        await prisma.orders.update({
+            where: { id: orderId },
+            data: {
+                status: OrderStatus.CANCELLED,
+            },
+        });
+    }
+    return {
+        message: "Payment failed!",
+    };
+};
+const handleCancel = async (orderId) => {
+    if (orderId) {
+        await prisma.orders.update({
+            where: { id: orderId },
+            data: {
+                status: OrderStatus.CANCELLED,
+            },
+        });
+    }
+    return {
+        message: "Payment cancelled by user!",
+    };
+};
+const getMyOrder = async (customerId) => {
+    const customerMedicine = await prisma.orders.findMany({
+        where: {
+            customerId: customerId,
+        },
+        include: {
+            address: true,
+            order: {
+                include: {
+                    medicine: true,
+                },
+            },
+        },
+    });
+    return customerMedicine;
+};
+const getMyMedicineOrder = async (sellerId) => {
+    const sellerOrders = await prisma.orders.findMany({
+        where: {
+            order: {
+                some: {
+                    medicine: {
+                        sellerId: sellerId
+                    }
+                }
+            }
+        },
+        orderBy: {
+            createdAt: "desc",
+        },
+        include: {
+            address: true,
+            customer: true,
+            order: {
+                include: {
+                    medicine: true
+                }
+            }
+        }
+    });
+    return sellerOrders;
+};
+export const orderService = {
+    createOrder, updateOrderStatus, handleSuccess,
+    handleFail,
+    handleCancel,
+    getMyOrder, getMyMedicineOrder
+};
+//# sourceMappingURL=order.service.js.map

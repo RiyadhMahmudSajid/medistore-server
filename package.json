@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
+"scripts": {
     "build": "tsc",
     "start": "node --import=extensionless/register dist/src/server.js",
     "dev": "tsx watch src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed:admin": "tsx watch src/scripts/seedAdmin.ts"
-  },
+},
   "keywords": [],
   "author": "",
   "license": "ISC",

@@ -1,4 +1,4 @@
-import { Categories } from "../../../generated/prisma/client";
+import { Categories } from "@prisma/client";
 import { prisma } from "../../lib/prisma";
 
 const createCategory = async (data: Omit<Categories, "id">) => {

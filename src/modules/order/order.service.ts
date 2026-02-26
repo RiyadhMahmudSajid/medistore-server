@@ -1,4 +1,4 @@
-import { OrderStatus } from "../../../generated/prisma/enums"
+import { OrderStatus } from "@prisma/client"
 import { prisma } from "../../lib/prisma"
 import SSLCommerzPayment from "sslcommerz-lts";
 const store_id = process.env.STORE_ID as string;

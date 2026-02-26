@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { categoryService } from "./category.service";
-import { Categories } from "../../../generated/prisma/client";
+import { Categories } from "@prisma/client";
 import { UserRole } from "../../middleware/authenticationMiddleware";
 
 const createCategory = async (req: Request, res: Response) => {

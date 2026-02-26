@@ -131,6 +131,7 @@ const updateOrderStatus = async (orderId: string, statusUpdate: OrderStatus) => 
         where: {
             id: orderId,
             status: fromStatus,
+            
         },
         data: {
             status: statusUpdate,

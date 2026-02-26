@@ -42,7 +42,12 @@ const getReview = async (userID: string) => {
     if (!userID) {
         throw new Error("You have no permission")
     }
-    const result = await prisma.reviews.findMany()
+    const result = await prisma.reviews.findMany({
+        include:{
+            medicine:true
+            
+        }
+    })
     return result
 }
 
@@ -55,7 +60,11 @@ const getReviewForSeller = async (userID: string) => {
 
     const result = await prisma.medicines.findMany({
         where: {
-            sellerId: userID
+            sellerId: userID,
+            reviews:{
+                some:{}
+            }
+
         },
 
         include: {

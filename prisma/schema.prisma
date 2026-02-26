@@ -105,7 +105,7 @@ model User {
   address  Address[]
   customer Orders[]
 
-  role String? @default("USER")
+  role String? @default("CUSTOMER")
 
   @@unique([email])
   @@map("user")

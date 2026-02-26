@@ -6,6 +6,6 @@ const router = express.Router()
 
 router.post("/:medicineId",authenticationMiddleware(UserRole.CUSTOMER), reviewController.createReview)
 router.get("/",authenticationMiddleware(UserRole.ADMIN),reviewController.getReview)
-router.get("/jok",authenticationMiddleware(UserRole.SELLER),reviewController.getReviewForSeller)
+router.get("/sellerReview",authenticationMiddleware(UserRole.SELLER),reviewController.getReviewForSeller)
 
 export const reviewRouter:Router = router

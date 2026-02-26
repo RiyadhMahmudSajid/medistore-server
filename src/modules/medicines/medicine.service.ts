@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "../../lib/prisma"
 
 
@@ -14,7 +15,7 @@ const createMedicine = async (medicineData: any, sellerId: any) => {
 }
 const getAllMedicine = async ({ search, page, limit, skip, sortby, sortOrder }: { search: string | undefined, page: number, limit: number, skip: number, sortby: string, sortOrder: string }) => {
 
-    let whereCondition = {}
+    let whereCondition: Prisma.MedicinesWhereInput = {}
 
     if (search) {
         const isNumber = !isNaN(Number(search));
@@ -67,7 +68,7 @@ const getAllMedicine = async ({ search, page, limit, skip, sortby, sortOrder }: 
 }
 const getMedicineById = async (MedicineId: string) => {
 
-    const medicine = await prisma.$transaction(async (tx) => {
+    const medicine = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
 
         const updatePosts = await tx.medicines.update({
 

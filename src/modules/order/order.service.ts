@@ -1,4 +1,4 @@
-import { OrderStatus } from "@prisma/client"
+import { OrderStatus, Prisma } from "@prisma/client"
 import { prisma } from "../../lib/prisma"
 import SSLCommerzPayment from "sslcommerz-lts";
 const store_id = process.env.STORE_ID as string;
@@ -21,7 +21,7 @@ type CreateOrderPayload = {
 const createOrder = async (payload: CreateOrderPayload, customerId: string) => {
 
 
-    const orderResult = await prisma.$transaction(async (tx) => {
+    const orderResult = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
 
         const medicineIds = payload.items.map(item => item.medicineId);
 
@@ -32,7 +32,7 @@ const createOrder = async (payload: CreateOrderPayload, customerId: string) => {
         let calculatedTotalPrice = 0;
 
         const orderItemsData = payload.items.map(item => {
-            const medicine = medicinesInDb.find(m => m.id === item.medicineId);
+           const medicine = medicinesInDb.find((m: any) => m.id === item.medicineId);
 
             if (!medicine) {
                 throw new Error(`Medicine ID ${item.medicineId} not found`);

@@ -17,11 +17,17 @@ export const auth = betterAuth({
         provider: "postgresql",
     }),
     trustedOrigins: [process.env.BETTER_APP_URL!],
+     cookie: {
+    httpOnly: true,  
+    secure: true,    
+    sameSite: "none" 
+  },
+  
     user: {
         additionalFields: {
             role: {
                 type: "string",
-                defaultValue: "USER",
+                defaultValue: "CUSTOMER",
                 required: false
             },
         }

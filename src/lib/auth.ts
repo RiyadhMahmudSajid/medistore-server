@@ -3,13 +3,15 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./prisma";
 import nodemailer from "nodemailer"
 const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
+    service: 'gmail',
     auth: {
         user: process.env.APP_USER,
         pass: process.env.APP_PASS,
     },
+    // টাইমআউট হ্যান্ডেল করার জন্য
+    pool: true,
+    maxConnections: 1,
+    connectionTimeout: 20000,
 });
 
 export const auth = betterAuth({
@@ -17,8 +19,8 @@ export const auth = betterAuth({
         provider: "postgresql",
     }),
     trustedOrigins: [process.env.BETTER_APP_URL!],
-     
-  
+
+
     user: {
         additionalFields: {
             role: {
@@ -32,7 +34,7 @@ export const auth = betterAuth({
         enabled: true,
         autoSignIn: true,
         requireEmailVerification: true,
-        
+
     },
     emailVerification: {
         sendOnSignUp: true,

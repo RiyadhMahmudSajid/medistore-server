@@ -9,13 +9,15 @@ const prisma_1 = require("better-auth/adapters/prisma");
 const prisma_2 = require("./prisma");
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const transporter = nodemailer_1.default.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
+    service: 'gmail',
     auth: {
         user: process.env.APP_USER,
         pass: process.env.APP_PASS,
     },
+    // টাইমআউট হ্যান্ডেল করার জন্য
+    pool: true,
+    maxConnections: 1,
+    connectionTimeout: 20000,
 });
 exports.auth = (0, better_auth_1.betterAuth)({
     database: (0, prisma_1.prismaAdapter)(prisma_2.prisma, {

@@ -18,8 +18,8 @@ app.use(cors({
   ],
   credentials: true
 }));
-app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use(express.json())
+app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use('/categoryPost',categoryRouter)
 app.use('/medicine',medicineRouter)
 app.use('/address',addressRouter)

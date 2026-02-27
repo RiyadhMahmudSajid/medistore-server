@@ -12,9 +12,11 @@ import { reviewRouter } from "./modules/review/review.route";
 
 const app:Application = express()
 app.use(cors({
-    origin: process.env.BETTER_APP_URL || "http://localhost:4000 ",
-    // methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    credentials: true, 
+  origin: [
+    "http://localhost:3000",
+    "https://medistore-client-beta.vercel.app"
+  ],
+  credentials: true
 }));
 app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use(express.json())

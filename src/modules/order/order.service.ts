@@ -81,9 +81,9 @@ const createOrder = async (payload: CreateOrderPayload, customerId: string) => {
         total_amount: orderResult.totalPrice,
         currency: "BDT",
         tran_id: orderResult.id,
-        success_url: `http://localhost:5000/order/success/${orderResult.id}`,
-        fail_url: `http://localhost:5000/order/fail/${orderResult.id}`,
-        cancel_url: `http://localhost:5000/order/cancel/${orderResult.id}`,
+        success_url: `${process.env.BETTER_AUTH_URL}/order/success/${orderResult.id}`,
+        fail_url: `${process.env.BETTER_AUTH_URL}/order/fail/${orderResult.id}`,
+        cancel_url: `${process.env.BETTER_AUTH_URL}/order/cancel/${orderResult.id}`,
         ipn_url: "",
 
         shipping_method: 'Courier',

@@ -33,9 +33,9 @@ const paymentSuccess = async (req: Request, res: Response) => {
     try {
         await orderService.handleSuccess(req.params.orderId as string);
 
-        res.redirect("http://localhost:3000");
+        res.redirect(`${process.env.BETTER_APP_URL}`);
     } catch (error: any) {
-        res.redirect("http://localhost:3000");
+        res.redirect(`${process.env.BETTER_APP_URL}`);
     }
 };
 
@@ -43,9 +43,9 @@ const paymentFail = async (req: Request, res: Response) => {
     try {
         await orderService.handleFail(req.params.orderId as string);
 
-        res.redirect("http://localhost:3000");
+        res.redirect(`${process.env.BETTER_APP_URL}`);
     } catch (error: any) {
-        res.redirect("http://localhost:3000");
+        res.redirect(`${process.env.BETTER_APP_URL}`);
     }
 };
 
@@ -53,9 +53,9 @@ const paymentCancel = async (req: Request, res: Response) => {
     try {
         await orderService.handleCancel(req.params.orderId as string);
 
-        res.redirect("http://localhost:3000");
+        res.redirect(`${process.env.BETTER_APP_URL}`);
     } catch (error: any) {
-        res.redirect("http://localhost:3000");
+        res.redirect(`${process.env.BETTER_APP_URL}`);
     }
 };
 

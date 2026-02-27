@@ -18,16 +18,14 @@ export declare const auth: import("better-auth/*").Auth<{
     emailVerification: {
         sendOnSignUp: true;
         autoSignInAfterVerification: true;
-        sendVerificationEmail: ({ user, url, token }: {
+        sendVerificationEmail: ({ user, token }: {
             user: import("better-auth/*").User;
             url: string;
             token: string;
-        }, request: Request | undefined) => Promise<void>;
+        }) => Promise<void>;
     };
     socialProviders: {
         google: {
-            accessType: "offline";
-            prompt: "select_account consent";
             clientId: string;
             clientSecret: string;
         };

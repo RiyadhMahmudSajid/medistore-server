@@ -3,15 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  
- 
-"scripts": {
+  "scripts": {
     "build": "tsc",
     "start": "node dist/src/server.js",
     "dev": "tsx watch src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed:admin": "tsx watch src/scripts/seedAdmin.ts"
-},
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -36,6 +34,7 @@
     "extensionless": "^2.0.6",
     "nodemailer": "^7.0.13",
     "pg": "^8.17.2",
+    "resend": "^6.9.2",
     "sslcommerz-lts": "^1.2.0"
   }
 }

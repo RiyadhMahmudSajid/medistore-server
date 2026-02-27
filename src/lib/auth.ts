@@ -3,20 +3,13 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./prisma";
 import nodemailer from "nodemailer"
 const transporter = nodemailer.createTransport({
-    service: 'gmail', // হোয়াইটলিস্টেড হওয়ার জন্য service ব্যবহার করা ভালো
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
     auth: {
         user: process.env.APP_USER,
         pass: process.env.APP_PASS,
     },
-    // এই নিচের অংশটুকু Render এর জন্য খুব জরুরি
-    pool: true, // কানেকশন ধরে রাখার জন্য
-    maxConnections: 1,
-    connectionTimeout: 20000, // ২০ সেকেন্ড সময় দিন কানেক্ট হতে
-    greetingTimeout: 20000,
-    socketTimeout: 20000,
-    tls: {
-        rejectUnauthorized: false // সেলফ-সাইনড সার্টিফিকেট এরর এড়াতে
-    }
 });
 
 export const auth = betterAuth({
@@ -24,8 +17,8 @@ export const auth = betterAuth({
         provider: "postgresql",
     }),
     trustedOrigins: [process.env.BETTER_APP_URL!],
-
-
+     
+  
     user: {
         additionalFields: {
             role: {
@@ -39,7 +32,7 @@ export const auth = betterAuth({
         enabled: true,
         autoSignIn: true,
         requireEmailVerification: true,
-
+        
     },
     emailVerification: {
         sendOnSignUp: true,

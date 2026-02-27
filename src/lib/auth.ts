@@ -1,74 +1,77 @@
-// src/lib/auth.ts
-
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./prisma";
+import nodemailer from "nodemailer"
+const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    auth: {
+        user: process.env.APP_USER,
+        pass: process.env.APP_PASS,
+    },
+});
 
 export const auth = betterAuth({
-  database: prismaAdapter(prisma, {
-    provider: "postgresql",
-  }),
-
-  // আপনার frontend URL (Vercel)
-  trustedOrigins: [
-    process.env.BETTER_APP_URL!,
-    "http://localhost:3000",
-  ],
-
-  // =========================
-  // Cookie Config (Cross-Origin Safe)
-  // =========================
-  cookie: {
-    httpOnly: true,
-    secure: true,        // production এ HTTPS দরকার
-    sameSite: "none",    // cross-site cookie allow
+    database: prismaAdapter(prisma, {
+        provider: "postgresql",
+    }),
+    trustedOrigins: [process.env.BETTER_APP_URL!],
+     cookie: {
+    httpOnly: true,  
+    secure: true,    
+    sameSite: "none" 
   },
-
-  advanced: {
-    crossSubDomainCookies: {
-      enabled: true,
+  
+    user: {
+        additionalFields: {
+            role: {
+                type: "string",
+                defaultValue: "CUSTOMER",
+                required: false
+            },
+        }
     },
-  },
-
-  // =========================
-  // User Extra Fields
-  // =========================
-  user: {
-    additionalFields: {
-      role: {
-        type: "string",
-        defaultValue: "CUSTOMER",
-        required: false,
-        input: true,
-      },
+    emailAndPassword: {
+        enabled: true,
+        autoSignIn: true,
+        requireEmailVerification: true,
+        
     },
-  },
+    emailVerification: {
+        sendOnSignUp: true,
+        autoSignInAfterVerification: true,
+        sendVerificationEmail: async ({ user, url, token }, request) => {
+            try {
+                console.log({ user, url, token });
+                const verificationUrl = `${process.env.BETTER_APP_URL}/verify-email?token=${token}`
+                const info = await transporter.sendMail({
+                    from: `"MedeStore" <rdh@gmail.com>`,
+                    to: user.email,
+                    subject: "Verify your email",
+                    text: "Medi Store",
+                    html: `
+            <div style="font-family: sans-serif; padding: 20px;">
+                <h2>Welcome to Our Platform!</h2>
+                <p>Hi ${user.name},</p>
+                <p>Please click the button below to verify your email address:</p>
+                <a href="${verificationUrl}" style="background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Verify Email</a>
+                <p>If the button doesn't work, copy this link: ${verificationUrl}</p>
+            </div>
+            `,
+                });
+            } catch (err) {
+                console.log(err);
+            }
+        },
 
-  // =========================
-  // Email + Password Auth
-  // =========================
-  emailAndPassword: {
-    enabled: true,
-    autoSignIn: true,
-    requireEmailVerification: false, // 🔥 verification OFF
-  },
-
-  // =========================
-  // Email Verification Disabled
-  // =========================
-  emailVerification: {
-    sendOnSignUp: false,
-  },
-
-  // =========================
-  // Google Login (Optional)
-  // =========================
-  socialProviders: {
-    google: {
-      accessType: "offline",
-      prompt: "select_account consent",
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     },
-  },
+    socialProviders: {
+        google: {
+            accessType: "offline",
+            prompt: "select_account consent",
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+        },
+    },
 });

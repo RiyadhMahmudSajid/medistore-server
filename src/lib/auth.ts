@@ -1,14 +1,16 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./prisma";
-import nodemailer from "nodemailer"
+import nodemailer from "nodemailer";
+
+// Resend SMTP কনফিগারেশন
 const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
+    host: "smtp.resend.com",
     port: 465,
     secure: true,
     auth: {
-        user: process.env.APP_USER,
-        pass: process.env.APP_PASS,
+        user: "resend", 
+        pass: process.env.RESEND_API_KEY, // Render-এ এই ভেরিয়েবলটি সেভ করবেন
     },
 });
 
@@ -17,8 +19,7 @@ export const auth = betterAuth({
         provider: "postgresql",
     }),
     trustedOrigins: [process.env.BETTER_APP_URL!],
-     
-  
+
     user: {
         additionalFields: {
             role: {
@@ -28,40 +29,44 @@ export const auth = betterAuth({
             },
         }
     },
+    
     emailAndPassword: {
         enabled: true,
         autoSignIn: true,
         requireEmailVerification: true,
-        
     },
+
     emailVerification: {
         sendOnSignUp: true,
         autoSignInAfterVerification: true,
         sendVerificationEmail: async ({ user, url, token }, request) => {
             try {
-                console.log({ user, url, token });
-                const verificationUrl = `${process.env.BETTER_APP_URL}/verify-email?token=${token}`
-                const info = await transporter.sendMail({
-                    from: `"MedeStore" <rdh@gmail.com>`,
+                // Rewrites ব্যবহার করলে লিঙ্কটি আপনার ফ্রন্টএন্ড ডোমেইন অনুযায়ী হবে
+                const verificationUrl = `${process.env.BETTER_APP_URL}/api/auth/verify-email?token=${token}&callbackURL=/`;
+                
+                await transporter.sendMail({
+                    from: "onboarding@resend.dev", // ডোমেইন ভেরিফাই না করা পর্যন্ত এটিই থাকবে
                     to: user.email,
                     subject: "Verify your email",
-                    text: "Medi Store",
                     html: `
-            <div style="font-family: sans-serif; padding: 20px;">
-                <h2>Welcome to Our Platform!</h2>
-                <p>Hi ${user.name},</p>
-                <p>Please click the button below to verify your email address:</p>
-                <a href="${verificationUrl}" style="background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Verify Email</a>
-                <p>If the button doesn't work, copy this link: ${verificationUrl}</p>
-            </div>
-            `,
+                        <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+                            <h2 style="color: #333;">Welcome to MediStore!</h2>
+                            <p>Hi ${user.name || 'User'},</p>
+                            <p>Please click the button below to verify your email address and complete your registration:</p>
+                            <div style="margin: 30px 0;">
+                                <a href="${verificationUrl}" style="background: #007bff; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">Verify Email Address</a>
+                            </div>
+                            <p style="font-size: 12px; color: #777;">If the button doesn't work, copy this link: ${verificationUrl}</p>
+                        </div>
+                    `,
                 });
+                console.log("Verification email sent via Resend to:", user.email);
             } catch (err) {
-                console.log(err);
+                console.error("Resend Sending Error:", err);
             }
         },
-
     },
+    
     socialProviders: {
         google: {
             accessType: "offline",

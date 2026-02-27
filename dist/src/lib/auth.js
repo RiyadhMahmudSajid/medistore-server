@@ -10,7 +10,7 @@ const prisma_2 = require("./prisma");
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const transporter = nodemailer_1.default.createTransport({
     host: "smtp.gmail.com",
-    port: 587,
+    port: 465,
     secure: false,
     auth: {
         user: process.env.APP_USER,

@@ -1,8 +1,11 @@
-import { addressService } from "./address.service";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.addressController = void 0;
+const address_service_1 = require("./address.service");
 const createAddress = async (req, res) => {
     try {
         const userId = req.user?.id;
-        const result = await addressService.createAddress(userId, req.body);
+        const result = await address_service_1.addressService.createAddress(userId, req.body);
         res.status(201).json(result);
     }
     catch (err) {
@@ -14,7 +17,7 @@ const createAddress = async (req, res) => {
         console.log(err);
     }
 };
-export const addressController = {
+exports.addressController = {
     createAddress
 };
 //# sourceMappingURL=address.controller.js.map

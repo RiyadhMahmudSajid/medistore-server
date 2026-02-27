@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const pagination = (option) => {
     const page = Number(option.page ?? 1);
     const limit = Number(option.limit ?? 10);
@@ -8,5 +10,5 @@ const pagination = (option) => {
         page, limit, skip, sortby, sortOrder
     };
 };
-export default pagination;
+exports.default = pagination;
 //# sourceMappingURL=pagination.js.map

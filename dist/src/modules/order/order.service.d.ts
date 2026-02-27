@@ -1,4 +1,4 @@
-import { OrderStatus } from "../../../generated/prisma/enums";
+import { OrderStatus, Prisma } from "@prisma/client";
 type OrderItemInput = {
     medicineId: string;
     quantity: number;
@@ -41,7 +41,7 @@ export declare const orderService: {
         } & {
             id: string;
             createdAt: Date;
-            status: OrderStatus;
+            status: import("@prisma/client").$Enums.OrderStatus;
             totalPrice: number;
             updateAt: Date;
             addressId: string;
@@ -49,7 +49,7 @@ export declare const orderService: {
         };
         paymentUrl: any;
     }>;
-    updateOrderStatus: (orderId: string, statusUpdate: OrderStatus) => Promise<import("../../../generated/prisma/internal/prismaNamespace").BatchPayload>;
+    updateOrderStatus: (orderId: string, statusUpdate: OrderStatus) => Promise<Prisma.BatchPayload>;
     handleSuccess: (orderId: string) => Promise<{
         message: string;
     }>;
@@ -91,7 +91,7 @@ export declare const orderService: {
     } & {
         id: string;
         createdAt: Date;
-        status: OrderStatus;
+        status: import("@prisma/client").$Enums.OrderStatus;
         totalPrice: number;
         updateAt: Date;
         addressId: string;
@@ -139,7 +139,7 @@ export declare const orderService: {
     } & {
         id: string;
         createdAt: Date;
-        status: OrderStatus;
+        status: import("@prisma/client").$Enums.OrderStatus;
         totalPrice: number;
         updateAt: Date;
         addressId: string;

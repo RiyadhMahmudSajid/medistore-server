@@ -1,6 +1,9 @@
-import { prisma } from "../../lib/prisma";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.reviewService = void 0;
+const prisma_1 = require("../../lib/prisma");
 const createReview = async (payload, medicineId, customerId) => {
-    const deliveredOrder = await prisma.orders.findFirst({
+    const deliveredOrder = await prisma_1.prisma.orders.findFirst({
         where: {
             customerId,
             status: "DELIVERED",
@@ -14,7 +17,7 @@ const createReview = async (payload, medicineId, customerId) => {
     if (deliveredOrder.status !== "DELIVERED") {
         throw new Error("You can only submit a review after delivery");
     }
-    const result = await prisma.reviews.create({
+    const result = await prisma_1.prisma.reviews.create({
         data: {
             ...payload,
             medicineId,
@@ -27,7 +30,7 @@ const getReview = async (userID) => {
     if (!userID) {
         throw new Error("You have no permission");
     }
-    const result = await prisma.reviews.findMany({
+    const result = await prisma_1.prisma.reviews.findMany({
         include: {
             medicine: true
         }
@@ -39,7 +42,7 @@ const getReviewForSeller = async (userID) => {
     if (!userID) {
         throw new Error("You have no permission");
     }
-    const result = await prisma.medicines.findMany({
+    const result = await prisma_1.prisma.medicines.findMany({
         where: {
             sellerId: userID,
             reviews: {
@@ -56,7 +59,7 @@ const getReviewForSeller = async (userID) => {
     });
     return result;
 };
-export const reviewService = {
+exports.reviewService = {
     createReview, getReview, getReviewForSeller
 };
 //# sourceMappingURL=review.service.js.map

@@ -1,11 +1,17 @@
-import { medicineService } from "./medicine.service";
-import pagination from "../../helper/pagination";
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.medicineController = void 0;
+const medicine_service_1 = require("./medicine.service");
+const pagination_1 = __importDefault(require("../../helper/pagination"));
 const createMedicine = async (req, res) => {
     try {
         if (req.user?.id && req.user.role !== "SELLER") {
             return res.status(400).json({ message: `this is  ${req.user.role}` });
         }
-        const result = await medicineService.createMedicine(req.body, req.user?.id);
+        const result = await medicine_service_1.medicineService.createMedicine(req.body, req.user?.id);
         res.status(201).json(result);
     }
     catch (err) {
@@ -18,9 +24,9 @@ const createMedicine = async (req, res) => {
 const getAllMedicine = async (req, res) => {
     try {
         const { search } = req.query;
-        const { page, limit, skip, sortby, sortOrder } = pagination(req.query);
+        const { page, limit, skip, sortby, sortOrder } = (0, pagination_1.default)(req.query);
         const searchMedicine = typeof search == 'string' ? search : undefined;
-        const result = await medicineService.getAllMedicine({ search: searchMedicine, page, limit, skip, sortby, sortOrder });
+        const result = await medicine_service_1.medicineService.getAllMedicine({ search: searchMedicine, page, limit, skip, sortby, sortOrder });
         res.status(201).json(result);
     }
     catch (err) {
@@ -35,7 +41,7 @@ const getMedicineById = async (req, res) => {
     try {
         const MedicineId = req.params.MedicineId;
         console.log(MedicineId);
-        const result = await medicineService.getMedicineById(MedicineId);
+        const result = await medicine_service_1.medicineService.getMedicineById(MedicineId);
         res.status(201).json(result);
     }
     catch (err) {
@@ -51,7 +57,7 @@ const getMedicineBySellerId = async (req, res) => {
         if (req.user?.id && req.user.role !== "SELLER") {
             return res.status(400).json({ message: `this is  ${req.user.role}` });
         }
-        const result = await medicineService.getMedicineBySellerId(req.user?.id);
+        const result = await medicine_service_1.medicineService.getMedicineBySellerId(req.user?.id);
         res.status(201).json(result);
     }
     catch (err) {
@@ -67,7 +73,7 @@ const deleteMedicine = async (req, res) => {
         const MedicineId = req.params.MedicineId;
         console.log(MedicineId);
         const sellerId = req.user?.id;
-        const result = await medicineService.deleteMedicine(MedicineId, sellerId);
+        const result = await medicine_service_1.medicineService.deleteMedicine(MedicineId, sellerId);
         res.status(201).json(result);
     }
     catch (err) {
@@ -83,7 +89,7 @@ const updateMedicine = async (req, res) => {
         const MedicineId = req.params.MedicineId;
         console.log(MedicineId);
         const sellerId = req.user?.id;
-        const result = await medicineService.updateMedicine(MedicineId, sellerId, req.body);
+        const result = await medicine_service_1.medicineService.updateMedicine(MedicineId, sellerId, req.body);
         res.status(201).json(result);
     }
     catch (err) {
@@ -94,7 +100,7 @@ const updateMedicine = async (req, res) => {
         console.log(err);
     }
 };
-export const medicineController = {
+exports.medicineController = {
     createMedicine, getAllMedicine, getMedicineById, deleteMedicine, updateMedicine, getMedicineBySellerId
 };
 //# sourceMappingURL=medicine.controller.js.map

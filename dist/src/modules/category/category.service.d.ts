@@ -1,4 +1,4 @@
-import { Categories } from "../../../generated/prisma/client";
+import { Categories } from "@prisma/client";
 export declare const categoryService: {
     createCategory: (data: Omit<Categories, "id">) => Promise<{
         name: string;

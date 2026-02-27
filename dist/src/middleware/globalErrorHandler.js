@@ -1,13 +1,15 @@
-import { Prisma } from "../../generated/prisma/client";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const client_1 = require("@prisma/client");
 function errorHandler(err, req, res, next) {
     let statusCode = 500;
     let errorMessage = "Internal Server Error";
     let errodetails = err;
-    if (err instanceof Prisma.PrismaClientValidationError) {
+    if (err instanceof client_1.Prisma.PrismaClientValidationError) {
         statusCode = 400;
         errorMessage = "You provide incorrect field or missing field";
     }
-    else if (err instanceof Prisma.PrismaClientKnownRequestError) {
+    else if (err instanceof client_1.Prisma.PrismaClientKnownRequestError) {
         if (err.code === "P2025") {
             statusCode = 400;
             errorMessage = "An operation failed because it depends on one or more records that were required but not found.";
@@ -21,11 +23,11 @@ function errorHandler(err, req, res, next) {
             errorMessage = "Foreign key constraint failed";
         }
     }
-    else if (err instanceof Prisma.PrismaClientUnknownRequestError) {
+    else if (err instanceof client_1.Prisma.PrismaClientUnknownRequestError) {
         statusCode = 500;
         errorMessage = "Error occurred during query execution";
     }
-    else if (err instanceof Prisma.PrismaClientInitializationError) {
+    else if (err instanceof client_1.Prisma.PrismaClientInitializationError) {
         if (err.errorCode === "P1000") {
             statusCode = 401;
             errorMessage = "Authentication failed. Please check your creditials!";
@@ -40,5 +42,5 @@ function errorHandler(err, req, res, next) {
         details: errodetails
     });
 }
-export default errorHandler;
+exports.default = errorHandler;
 //# sourceMappingURL=globalErrorHandler.js.map

@@ -1,6 +1,9 @@
-import { prisma } from "../../lib/prisma";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.medicineService = void 0;
+const prisma_1 = require("../../lib/prisma");
 const createMedicine = async (medicineData, sellerId) => {
-    const result = await prisma.medicines.create({
+    const result = await prisma_1.prisma.medicines.create({
         data: {
             ...medicineData,
             sellerId
@@ -33,7 +36,7 @@ const getAllMedicine = async ({ search, page, limit, skip, sortby, sortOrder }) 
             ],
         };
     }
-    const AllMedicine = await prisma.medicines.findMany({
+    const AllMedicine = await prisma_1.prisma.medicines.findMany({
         where: whereCondition,
         orderBy: {
             [sortby]: sortOrder
@@ -41,7 +44,7 @@ const getAllMedicine = async ({ search, page, limit, skip, sortby, sortOrder }) 
         take: limit,
         skip
     });
-    const total = await prisma.medicines.count({
+    const total = await prisma_1.prisma.medicines.count({
         where: whereCondition
     });
     return {
@@ -55,7 +58,7 @@ const getAllMedicine = async ({ search, page, limit, skip, sortby, sortOrder }) 
     };
 };
 const getMedicineById = async (MedicineId) => {
-    const medicine = await prisma.$transaction(async (tx) => {
+    const medicine = await prisma_1.prisma.$transaction(async (tx) => {
         const updatePosts = await tx.medicines.update({
             where: {
                 id: MedicineId
@@ -76,7 +79,7 @@ const getMedicineById = async (MedicineId) => {
     return medicine;
 };
 const getMedicineBySellerId = async (sellerId) => {
-    const sellerMedicine = await prisma.medicines.findMany({
+    const sellerMedicine = await prisma_1.prisma.medicines.findMany({
         where: {
             sellerId: sellerId,
         },
@@ -84,7 +87,7 @@ const getMedicineBySellerId = async (sellerId) => {
     return sellerMedicine;
 };
 const deleteMedicine = async (MedicineId, sellerId) => {
-    const medicineData = await prisma.medicines.findFirst({
+    const medicineData = await prisma_1.prisma.medicines.findFirst({
         where: {
             id: MedicineId,
             sellerId
@@ -93,14 +96,14 @@ const deleteMedicine = async (MedicineId, sellerId) => {
     if (!medicineData) {
         throw new Error('Your Provide input is invalid');
     }
-    return await prisma.medicines.delete({
+    return await prisma_1.prisma.medicines.delete({
         where: {
             id: medicineData.id
         }
     });
 };
 const updateMedicine = async (MedicineId, sellerId, data) => {
-    const medicineData = await prisma.medicines.findFirst({
+    const medicineData = await prisma_1.prisma.medicines.findFirst({
         where: {
             id: MedicineId,
             sellerId
@@ -109,13 +112,13 @@ const updateMedicine = async (MedicineId, sellerId, data) => {
     if (!medicineData) {
         throw new Error('Your Provide input is invalid');
     }
-    return await prisma.medicines.update({
+    return await prisma_1.prisma.medicines.update({
         where: {
             id: medicineData.id
         }, data
     });
 };
-export const medicineService = {
+exports.medicineService = {
     createMedicine,
     getAllMedicine,
     getMedicineById,

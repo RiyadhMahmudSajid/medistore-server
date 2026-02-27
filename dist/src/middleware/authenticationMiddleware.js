@@ -1,15 +1,18 @@
-import { auth } from "../lib/auth";
-export var UserRole;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserRole = void 0;
+const auth_1 = require("../lib/auth");
+var UserRole;
 (function (UserRole) {
     UserRole["ADMIN"] = "ADMIN";
     UserRole["USER"] = "USER";
     UserRole["CUSTOMER"] = "CUSTOMER";
     UserRole["SELLER"] = "SELLER";
-})(UserRole || (UserRole = {}));
+})(UserRole || (exports.UserRole = UserRole = {}));
 const authenticationMiddleware = (...roles) => {
     return async (req, res, next) => {
         try {
-            const session = await auth.api.getSession({
+            const session = await auth_1.auth.api.getSession({
                 headers: req.headers
             });
             console.log(session);
@@ -45,5 +48,5 @@ const authenticationMiddleware = (...roles) => {
         }
     };
 };
-export default authenticationMiddleware;
+exports.default = authenticationMiddleware;
 //# sourceMappingURL=authenticationMiddleware.js.map

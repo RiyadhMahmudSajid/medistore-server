@@ -1,18 +1,24 @@
-import { OrderStatus } from "../../../generated/prisma/enums";
-import { prisma } from "../../lib/prisma";
-import SSLCommerzPayment from "sslcommerz-lts";
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.orderService = void 0;
+const client_1 = require("@prisma/client");
+const prisma_1 = require("../../lib/prisma");
+const sslcommerz_lts_1 = __importDefault(require("sslcommerz-lts"));
 const store_id = process.env.STORE_ID;
 const store_passwd = process.env.STORE_PASS;
 const is_live = false;
 const createOrder = async (payload, customerId) => {
-    const orderResult = await prisma.$transaction(async (tx) => {
+    const orderResult = await prisma_1.prisma.$transaction(async (tx) => {
         const medicineIds = payload.items.map(item => item.medicineId);
         const medicinesInDb = await tx.medicines.findMany({
             where: { id: { in: medicineIds } }
         });
         let calculatedTotalPrice = 0;
         const orderItemsData = payload.items.map(item => {
-            const medicine = medicinesInDb.find(m => m.id === item.medicineId);
+            const medicine = medicinesInDb.find((m) => m.id === item.medicineId);
             if (!medicine) {
                 throw new Error(`Medicine ID ${item.medicineId} not found`);
             }
@@ -46,14 +52,14 @@ const createOrder = async (payload, customerId) => {
         });
         return result;
     });
-    const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
+    const sslcz = new sslcommerz_lts_1.default(store_id, store_passwd, is_live);
     const paymentData = {
         total_amount: orderResult.totalPrice,
         currency: "BDT",
         tran_id: orderResult.id,
-        success_url: `http://localhost:5000/order/success/${orderResult.id}`,
-        fail_url: `http://localhost:5000/order/fail/${orderResult.id}`,
-        cancel_url: `http://localhost:5000/order/cancel/${orderResult.id}`,
+        success_url: `${process.env.BETTER_AUTH_URL}/order/success/${orderResult.id}`,
+        fail_url: `${process.env.BETTER_AUTH_URL}/order/fail/${orderResult.id}`,
+        cancel_url: `${process.env.BETTER_AUTH_URL}/order/cancel/${orderResult.id}`,
         ipn_url: "",
         shipping_method: 'Courier',
         product_name: 'Medicine Bundle',
@@ -90,7 +96,7 @@ const updateOrderStatus = async (orderId, statusUpdate) => {
     else {
         throw new Error('Invalid target status');
     }
-    const result = await prisma.orders.updateMany({
+    const result = await prisma_1.prisma.orders.updateMany({
         where: {
             id: orderId,
             status: fromStatus,
@@ -105,10 +111,10 @@ const handleSuccess = async (orderId) => {
     if (!orderId) {
         throw new Error("Order ID is missing");
     }
-    await prisma.orders.update({
+    await prisma_1.prisma.orders.update({
         where: { id: orderId },
         data: {
-            status: OrderStatus.PROCESSING,
+            status: client_1.OrderStatus.PROCESSING,
         },
     });
     return {
@@ -117,10 +123,10 @@ const handleSuccess = async (orderId) => {
 };
 const handleFail = async (orderId) => {
     if (orderId) {
-        await prisma.orders.update({
+        await prisma_1.prisma.orders.update({
             where: { id: orderId },
             data: {
-                status: OrderStatus.CANCELLED,
+                status: client_1.OrderStatus.CANCELLED,
             },
         });
     }
@@ -130,10 +136,10 @@ const handleFail = async (orderId) => {
 };
 const handleCancel = async (orderId) => {
     if (orderId) {
-        await prisma.orders.update({
+        await prisma_1.prisma.orders.update({
             where: { id: orderId },
             data: {
-                status: OrderStatus.CANCELLED,
+                status: client_1.OrderStatus.CANCELLED,
             },
         });
     }
@@ -142,7 +148,7 @@ const handleCancel = async (orderId) => {
     };
 };
 const getMyOrder = async (customerId) => {
-    const customerMedicine = await prisma.orders.findMany({
+    const customerMedicine = await prisma_1.prisma.orders.findMany({
         where: {
             customerId: customerId,
         },
@@ -158,7 +164,7 @@ const getMyOrder = async (customerId) => {
     return customerMedicine;
 };
 const getMyMedicineOrder = async (sellerId) => {
-    const sellerOrders = await prisma.orders.findMany({
+    const sellerOrders = await prisma_1.prisma.orders.findMany({
         where: {
             order: {
                 some: {
@@ -183,7 +189,7 @@ const getMyMedicineOrder = async (sellerId) => {
     });
     return sellerOrders;
 };
-export const orderService = {
+exports.orderService = {
     createOrder, updateOrderStatus, handleSuccess,
     handleFail,
     handleCancel,

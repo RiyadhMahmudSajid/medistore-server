@@ -1,12 +1,15 @@
-import { prisma } from "../../lib/prisma";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.categoryService = void 0;
+const prisma_1 = require("../../lib/prisma");
 const createCategory = async (data) => {
-    const result = await prisma.categories.create({
+    const result = await prisma_1.prisma.categories.create({
         data
     });
     return result;
 };
 const getCategory = async ({ search }) => {
-    const result = await prisma.categories.findMany({
+    const result = await prisma_1.prisma.categories.findMany({
         where: search
             ? {
                 name: {
@@ -19,7 +22,7 @@ const getCategory = async ({ search }) => {
     return result;
 };
 const getCategoryById = async (categoryId) => {
-    const result = await prisma.categories.findUnique({
+    const result = await prisma_1.prisma.categories.findUnique({
         where: {
             id: categoryId
         },
@@ -35,14 +38,14 @@ const getCategoryById = async (categoryId) => {
     return result;
 };
 const deleteCategoryById = async (categoryId) => {
-    const result = await prisma.categories.delete({
+    const result = await prisma_1.prisma.categories.delete({
         where: {
             id: categoryId
         }
     });
     return result;
 };
-export const categoryService = {
+exports.categoryService = {
     createCategory,
     getCategory, getCategoryById, deleteCategoryById
 };

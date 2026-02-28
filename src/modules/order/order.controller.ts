@@ -11,7 +11,7 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
         const result = await orderService.createOrder(req.body, req.user?.id as string)
         res.status(201).json(result)
     } catch (err) {
-        console.log(err);
+        
         next(err)
     }
 }
@@ -22,11 +22,11 @@ const updateOrderStatus = async (req: Request, res: Response) => {
         const orderId = req.params.orderId as string
         const { status } = req.body
         const result = await orderService.updateOrderStatus(orderId, status)
-        console.log(result);
+       
         res.status(201).json(result)
 
     } catch (err) {
-        console.log(err);
+        
     }
 }
 const paymentSuccess = async (req: Request, res: Response) => {
@@ -69,14 +69,14 @@ const getMyOrder = async (req: Request, res: Response) => {
         res.status(201).json(result)
 
     } catch (err) {
-        console.log(err);
+        
         res.status(400).json({
             error: "Can Not find Medicine",
 
             details: err
 
         })
-        console.log(err);
+        
     }
 };
 const getMyMedicineOrder = async (req: Request, res: Response) => {
@@ -89,14 +89,14 @@ const getMyMedicineOrder = async (req: Request, res: Response) => {
         res.status(201).json(result)
 
     } catch (err) {
-        console.log(err);
+        
         res.status(400).json({
             error: "Can Not find your medicine that already order",
 
             details: err
 
         })
-        console.log(err);
+        
     }
 }
 

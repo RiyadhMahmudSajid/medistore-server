@@ -31,7 +31,6 @@ exports.auth = (0, better_auth_1.betterAuth)({
         sendVerificationEmail: async ({ user, token }) => {
             try {
                 const verificationUrl = `${process.env.BETTER_APP_URL}/api/auth/verify-email?token=${token}&callbackURL=/`;
-                // SMTP এর বদলে API দিয়ে ইমেইল পাঠানো
                 const { data, error } = await resend.emails.send({
                     from: "onboarding@resend.dev",
                     to: user.email,
@@ -46,12 +45,10 @@ exports.auth = (0, better_auth_1.betterAuth)({
                     `,
                 });
                 if (error) {
-                    return console.error("Resend API Error:", error);
+                    return;
                 }
-                console.log("Email sent successfully via API!", data?.id);
             }
             catch (err) {
-                console.error("Critical Sending Error:", err);
             }
         },
     },

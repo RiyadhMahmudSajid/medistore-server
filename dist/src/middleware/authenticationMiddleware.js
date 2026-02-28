@@ -15,7 +15,6 @@ const authenticationMiddleware = (...roles) => {
             const session = await auth_1.auth.api.getSession({
                 headers: req.headers
             });
-            console.log(session);
             if (!session) {
                 return res.status(401).json({
                     success: true,

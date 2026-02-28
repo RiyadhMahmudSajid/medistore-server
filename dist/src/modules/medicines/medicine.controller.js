@@ -34,13 +34,11 @@ const getAllMedicine = async (req, res) => {
             error: "Category creation failed",
             details: err
         });
-        console.log(err);
     }
 };
 const getMedicineById = async (req, res) => {
     try {
         const MedicineId = req.params.MedicineId;
-        console.log(MedicineId);
         const result = await medicine_service_1.medicineService.getMedicineById(MedicineId);
         res.status(201).json(result);
     }
@@ -49,7 +47,6 @@ const getMedicineById = async (req, res) => {
             error: "Can Not find description",
             details: err
         });
-        console.log(err);
     }
 };
 const getMedicineBySellerId = async (req, res) => {
@@ -65,13 +62,11 @@ const getMedicineBySellerId = async (req, res) => {
             error: "Can Not find Medicine",
             details: err
         });
-        console.log(err);
     }
 };
 const deleteMedicine = async (req, res) => {
     try {
         const MedicineId = req.params.MedicineId;
-        console.log(MedicineId);
         const sellerId = req.user?.id;
         const result = await medicine_service_1.medicineService.deleteMedicine(MedicineId, sellerId);
         res.status(201).json(result);
@@ -81,13 +76,11 @@ const deleteMedicine = async (req, res) => {
             error: "Can Not find Medicine",
             details: err
         });
-        console.log(err);
     }
 };
 const updateMedicine = async (req, res) => {
     try {
         const MedicineId = req.params.MedicineId;
-        console.log(MedicineId);
         const sellerId = req.user?.id;
         const result = await medicine_service_1.medicineService.updateMedicine(MedicineId, sellerId, req.body);
         res.status(201).json(result);
@@ -97,7 +90,6 @@ const updateMedicine = async (req, res) => {
             error: "Can Not Update Medicine",
             details: err
         });
-        console.log(err);
     }
 };
 exports.medicineController = {

@@ -18,7 +18,6 @@ const createCategory = async (req, res) => {
 const getCategory = async (req, res) => {
     try {
         const { search } = req.query;
-        console.log(search);
         const searchString = typeof search === 'string' ? search : undefined;
         const result = await category_service_1.categoryService.getCategory({ search: searchString });
         res.status(201).json(result);

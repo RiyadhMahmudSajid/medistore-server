@@ -29,7 +29,7 @@ const authenticationMiddleware = (...roles: UserRole[]) => {
             const session = await auth.api.getSession({
                 headers: req.headers as any
             })
-            console.log(session);
+           
             if (!session) {
                 return res.status(401).json({
                     success: true,

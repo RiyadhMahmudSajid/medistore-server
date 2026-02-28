@@ -10,14 +10,11 @@ async function main() {
     try {
         await prisma_1.prisma.$connect();
         {
-            console.log("connected to database");
             app_1.default.listen(PORT, () => {
-                console.log(`SERVER IS RUNNING ON${PORT}`);
             });
         }
     }
     catch (error) {
-        console.error("An error occurred", error);
         await prisma_1.prisma.$disconnect();
         process.exit(1);
     }

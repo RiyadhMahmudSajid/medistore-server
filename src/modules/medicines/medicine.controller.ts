@@ -38,7 +38,7 @@ const getAllMedicine = async (req: Request, res: Response) => {
             details: err
 
         })
-        console.log(err);
+        
     }
 }
 
@@ -46,7 +46,7 @@ const getMedicineById = async (req: Request, res: Response) => {
     try {
 
         const MedicineId = req.params.MedicineId as string
-        console.log(MedicineId);
+        
 
         const result = await medicineService.getMedicineById(MedicineId)
         res.status(201).json(result)
@@ -58,7 +58,7 @@ const getMedicineById = async (req: Request, res: Response) => {
             details: err
 
         })
-        console.log(err);
+        
     }
 }
 const getMedicineBySellerId = async (req: Request, res: Response) => {
@@ -79,7 +79,7 @@ const getMedicineBySellerId = async (req: Request, res: Response) => {
             details: err
 
         })
-        console.log(err);
+       
     }
 }
 
@@ -87,7 +87,7 @@ const deleteMedicine = async (req: Request, res: Response) => {
     try {
 
         const MedicineId = req.params.MedicineId as string
-        console.log(MedicineId);
+       
         const sellerId = req.user?.id as string
         const result = await medicineService.deleteMedicine(MedicineId, sellerId)
         res.status(201).json(result)
@@ -99,14 +99,14 @@ const deleteMedicine = async (req: Request, res: Response) => {
             details: err
 
         })
-        console.log(err);
+      
     }
 }
 
 const updateMedicine = async (req: Request, res: Response) => {
     try {
         const MedicineId = req.params.MedicineId as string
-        console.log(MedicineId);
+        
         const sellerId = req.user?.id as string
         const result = await medicineService.updateMedicine(MedicineId, sellerId,req.body)
         res.status(201).json(result)
@@ -118,7 +118,7 @@ const updateMedicine = async (req: Request, res: Response) => {
             details: err
 
         })
-        console.log(err);
+       
 
     }
 }

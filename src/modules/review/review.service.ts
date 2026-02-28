@@ -15,7 +15,7 @@ const createReview = async (payload: review, medicineId: string, customerId: str
             order: { some: { medicineId } }
         }
     })
-    console.log(deliveredOrder);
+    
 
     if (!deliveredOrder) {
         throw new Error("Order not found")
@@ -53,7 +53,7 @@ const getReview = async (userID: string) => {
 
 const getReviewForSeller = async (userID: string) => {
 
-    console.log(userID);
+    
     if (!userID) {
         throw new Error("You have no permission")
     }

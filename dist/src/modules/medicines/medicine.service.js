@@ -9,7 +9,6 @@ const createMedicine = async (medicineData, sellerId) => {
             sellerId
         }
     });
-    console.log(result);
     return result;
 };
 const getAllMedicine = async ({ search, page, limit, skip, sortby, sortOrder }) => {

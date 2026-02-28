@@ -10,7 +10,7 @@ const createMedicine = async (medicineData: any, sellerId: any) => {
             sellerId
         }
     })
-    console.log(result);
+    
     return result
 }
 const getAllMedicine = async ({ search, page, limit, skip, sortby, sortOrder }: { search: string | undefined, page: number, limit: number, skip: number, sortby: string, sortOrder: string }) => {

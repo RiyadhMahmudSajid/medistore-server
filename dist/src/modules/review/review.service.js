@@ -10,7 +10,6 @@ const createReview = async (payload, medicineId, customerId) => {
             order: { some: { medicineId } }
         }
     });
-    console.log(deliveredOrder);
     if (!deliveredOrder) {
         throw new Error("Order not found");
     }
@@ -38,7 +37,6 @@ const getReview = async (userID) => {
     return result;
 };
 const getReviewForSeller = async (userID) => {
-    console.log(userID);
     if (!userID) {
         throw new Error("You have no permission");
     }

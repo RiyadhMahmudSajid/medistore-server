@@ -9,7 +9,7 @@ const createAddress = async (req: Request, res: Response) => {
         res.status(201).json(result)
 
     } catch (err) {
-         console.log(err)
+         
         res.status(400).json({
            
             error: "Can  crete address",
@@ -17,7 +17,7 @@ const createAddress = async (req: Request, res: Response) => {
             details: err
 
         })
-        console.log(err);
+        
 
     }
 }
